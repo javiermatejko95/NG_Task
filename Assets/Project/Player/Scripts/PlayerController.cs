@@ -23,6 +23,9 @@ public class PlayerController : MonoBehaviour
     [Range(0f, 1f)]
     public float movementSmoothing = 0.1f;
 
+    [Tooltip("Animation speed blend (smoothing)")]
+    public float AnimationSpeedBlend = 10.0f;
+
     [Tooltip("Character rotation speed toward the movement direction")]
     public float rotationSpeed = 10f;
 
@@ -80,6 +83,7 @@ public class PlayerController : MonoBehaviour
     private float _jumpBufferCounter;
 
     private float _currentSpeed;
+    private float _animationBlend;
 
     // ──────────────────────────────────────────────
     // ANIMATION ID's
@@ -87,6 +91,8 @@ public class PlayerController : MonoBehaviour
 
     private readonly int SpeedHash = Animator.StringToHash("Speed");
     private readonly int Grounded = Animator.StringToHash("IsGrounded");
+    private readonly int Jump = Animator.StringToHash("IsJumping");
+    private readonly int FreeFall = Animator.StringToHash("IsFreeFall");
 
     // ──────────────────────────────────────────────
     // PROPERTIES
@@ -155,6 +161,8 @@ public class PlayerController : MonoBehaviour
         if (!_wasGrounded && _isGrounded)
         {
             OnLand?.Invoke();
+            _anim.SetBool(Jump, false);
+            _anim.SetBool(FreeFall, false);
         }
 
         _anim.SetBool(Grounded, _isGrounded);
@@ -236,7 +244,10 @@ public class PlayerController : MonoBehaviour
             );
         }
 
-        _anim.SetFloat(SpeedHash, _currentSpeed);
+        _animationBlend = Mathf.Lerp(_animationBlend, targetSpeed, Time.deltaTime * AnimationSpeedBlend);
+        if (_animationBlend < 0.01f) _animationBlend = 0f;
+
+        _anim.SetFloat(SpeedHash, _animationBlend);
 
         // Slope handling
         HandleSlope();
@@ -286,6 +297,8 @@ public class PlayerController : MonoBehaviour
         // v = sqrt(2 * g * h)
         _velocity.y = Mathf.Sqrt(2f * Mathf.Abs(GRAVITY) * gravityMultiplier * jumpHeight);
         OnJump?.Invoke();
+
+        _anim.SetBool(Jump, true);
     }
 
     // ══════════════════════════════════════════════
