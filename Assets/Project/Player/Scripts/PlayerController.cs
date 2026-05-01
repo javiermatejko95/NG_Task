@@ -1,9 +1,10 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 /// <summary>
 /// Main player controller for a 3D game.
-/// Requires: CharacterController, PlayerInputHandler, CameraController in the scene.
+/// Requires: CharacterController, PlayerInputHandler
 /// </summary>
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(PlayerInputHandler))]
@@ -106,9 +107,9 @@ public class PlayerController : MonoBehaviour
     // ──────────────────────────────────────────────
     // EVENTS
     // ──────────────────────────────────────────────
-    public event System.Action OnJump;
-    public event System.Action OnLand;
-    public event System.Action<bool> OnSprintChanged;
+    public event Action OnJump;
+    public event Action OnLand;
+    public event Action<bool> OnSprintChanged;    
 
     // ──────────────────────────────────────────────
     // CONSTANTS
