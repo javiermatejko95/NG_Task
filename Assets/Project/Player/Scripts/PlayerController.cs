@@ -63,6 +63,7 @@ public class PlayerController : MonoBehaviour
     private CharacterController _cc;
     private PlayerInputHandler _input;
     private Transform _cameraTransform;
+    private Animator _anim;
 
     // ──────────────────────────────────────────────
     // STATE
@@ -79,6 +80,13 @@ public class PlayerController : MonoBehaviour
     private float _jumpBufferCounter;
 
     private float _currentSpeed;
+
+    // ──────────────────────────────────────────────
+    // ANIMATION ID's
+    // ──────────────────────────────────────────────
+
+    private readonly int SpeedHash = Animator.StringToHash("Speed");
+    private readonly int Grounded = Animator.StringToHash("IsGrounded");
 
     // ──────────────────────────────────────────────
     // PROPERTIES
@@ -109,6 +117,7 @@ public class PlayerController : MonoBehaviour
     {
         _cc    = GetComponent<CharacterController>();
         _input = GetComponent<PlayerInputHandler>();
+        _anim = GetComponent<Animator>();
 
         if (Camera.main != null)
             _cameraTransform = Camera.main.transform;
@@ -147,6 +156,8 @@ public class PlayerController : MonoBehaviour
         {
             OnLand?.Invoke();
         }
+
+        _anim.SetBool(Grounded, _isGrounded);
     }
 
     // ══════════════════════════════════════════════
@@ -186,7 +197,8 @@ public class PlayerController : MonoBehaviour
             OnSprintChanged?.Invoke(_isSprinting);
 
         // Target speed based on state
-        float targetSpeed = _isSprinting ? sprintSpeed :
+        float targetSpeed = inputVector == Vector2.zero ? 0f : 
+                            _isSprinting ? sprintSpeed :
                             walkSpeed;
 
         _currentSpeed = targetSpeed;
@@ -223,6 +235,8 @@ public class PlayerController : MonoBehaviour
                 rotationSpeed * Time.deltaTime
             );
         }
+
+        _anim.SetFloat(SpeedHash, _currentSpeed);
 
         // Slope handling
         HandleSlope();
