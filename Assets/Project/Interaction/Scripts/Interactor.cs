@@ -15,8 +15,18 @@ public class Interactor : MonoBehaviour
         }
     }
 
+    public void RemoveFromInRangeList(IInteractable interactable)
+    {
+        if (_inRange.Contains(interactable))
+        {
+            _inRange.Remove(interactable);
+        }
+    }
+
     private IInteractable GetBestTarget()
     {
+        _inRange.RemoveAll(i => i == null);
+
         float bestDistance = float.MaxValue;
         IInteractable best = null;
 
