@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class InventoryController : MonoBehaviour
@@ -33,12 +34,13 @@ public class InventoryController : MonoBehaviour
 
     private void RemoveItem(InventoryItem item)
     {
-
+        _inventoryUI.RemoveItem(item);
     }
 
     private void UseItem(InventoryItem item)
     {
-
+        //TODO: Implement item usage logic here
+        _inventoryUI.RemoveItem(item);
     }
 
     private void EquipItem(InventoryItem item)
@@ -53,6 +55,9 @@ public class InventoryController : MonoBehaviour
 
     private void SwapItems(InventoryItem item, InventoryItem item2)
     {
+        ItemData temp = item.GetItem();
 
+        item.SetItem(item2.GetItem());
+        item2.SetItem(temp);
     }    
 }

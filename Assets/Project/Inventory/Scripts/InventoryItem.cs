@@ -2,30 +2,58 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerEnterHandler, IPointerExitHandler
+public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler, IDropHandler
 {
     [Header("UI")]
-    public Image icon;
+    [SerializeField] private Image _imgIcon;
+    [SerializeField] private Button _btnRemove;
 
     private ItemData _item;
     private Canvas _canvas;
 
     private GameObject _dragIcon;
 
+    private bool _isDragging;
+
     public bool HasItem => _item != null;
+
+    public static InventoryItem DraggedItem;
 
     private void Awake()
     {
-        _canvas = GetComponentInParent<Canvas>();
+        _canvas = GetComponentInParent<Canvas>();        
+    }
+
+    private void OnEnable()
+    {
+        _btnRemove.onClick.AddListener(HandleOnItemRemoved);
+        _btnRemove.gameObject.SetActive(HasItem);
+    }
+
+    private void OnDisable()
+    {
+        _btnRemove.onClick.RemoveListener(HandleOnItemRemoved);
     }
 
     // SET ITEM
     public void SetItem(ItemData item)
     {
-        _item = item;
+        if(item != null)
+        {
+            _item = item;
+            _imgIcon.sprite = item.Icon;
+            _imgIcon.enabled = true;
+            _btnRemove.gameObject.SetActive(true);
+            return;
+        }
 
-        icon.sprite = item.Icon;
-        icon.enabled = true;
+        Clear();
+    }
+
+    // GET ITEM
+    public ItemData GetItem()
+    {
+        return _item;
     }
 
     // CLEAR SLOT
@@ -33,8 +61,10 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     {
         _item = null;
 
-        icon.sprite = null;
-        icon.enabled = false;
+        _imgIcon.sprite = null;
+        _imgIcon.enabled = false;
+
+        _btnRemove.gameObject.SetActive(HasItem);
     }
 
     // -------------------
@@ -45,11 +75,14 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     {
         if (!HasItem) return;
 
+        _isDragging = true;
+        DraggedItem = this;
+
         _dragIcon = new GameObject("DragIcon");
         _dragIcon.transform.SetParent(_canvas.transform);
 
         Image img = _dragIcon.AddComponent<Image>();
-        img.sprite = icon.sprite;
+        img.sprite = _imgIcon.sprite;
         img.raycastTarget = false;
 
         _dragIcon.transform.SetAsLastSibling();
@@ -57,6 +90,7 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
     public void OnDrag(PointerEventData eventData)
     {
+        // TODO: Fix bug where the dragged icon stays on the screen after closing the inventory window with I key
         if (_dragIcon == null) return;
 
         _dragIcon.transform.position = eventData.position;
@@ -68,6 +102,26 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         {
             Destroy(_dragIcon);
         }
+
+        DraggedItem = null;
+        _isDragging = false;
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if (!HasItem || _isDragging || DraggedItem != null) return;
+
+        if (eventData.button == PointerEventData.InputButton.Right)
+        {
+            UseItem();
+        }
+    }
+
+    public void OnDrop(PointerEventData eventData)
+    {
+        if (DraggedItem == null || DraggedItem == this) return;
+
+        InventoryEvents.RaiseOnItemSwapped(DraggedItem, this);
     }
 
     // -------------------
@@ -78,11 +132,21 @@ public class InventoryItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     {
         if (!HasItem) return;
 
-        //TooltipSystem.Show(_item);
+        TooltipSystem.Instance.Show(_item, (RectTransform)transform);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        //TooltipSystem.Hide();
+        TooltipSystem.Instance.Hide();
+    }
+
+    private void HandleOnItemRemoved()
+    {
+        InventoryEvents.RaiseOnItemRemoved(this);
+    }
+
+    private void UseItem()
+    {
+        InventoryEvents.RaiseOnItemUsed(this);
     }
 }

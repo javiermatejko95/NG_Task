@@ -32,6 +32,14 @@ public class InventoryUI : UIPanel
         }
     }
 
+    public void RemoveItem(InventoryItem item)
+    {
+        if (_inventoryItems.Contains(item))
+        {
+            item.Clear();
+        }
+    }
+
     protected override void OnCloseButtonClicked()
     {
         base.OnCloseButtonClicked();
