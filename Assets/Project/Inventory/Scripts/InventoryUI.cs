@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class InventoryUI : UIPanel
@@ -6,13 +7,28 @@ public class InventoryUI : UIPanel
     [SerializeField] private InventoryItem _inventoryItemPrefab;
     [SerializeField] private PlayerInputHandler _playerInputHandler;
 
+    private List<InventoryItem> _inventoryItems = new();
+
     public void Initialize(int maxSlots)
     {
         _playerInputHandler.OnToggleInventory += HandleOnToggleInventory;
 
         for (int i = 0; i < maxSlots; i++)
         {
-            Instantiate(_inventoryItemPrefab, _inventoryItemsParent);
+            InventoryItem inventoryItem = Instantiate(_inventoryItemPrefab, _inventoryItemsParent);
+            _inventoryItems.Add(inventoryItem);
+        }
+    }
+
+    public void AddItem(ItemData itemData)
+    {
+        foreach (InventoryItem inventoryItem in _inventoryItems)
+        {
+            if (!inventoryItem.HasItem)
+            {
+                inventoryItem.SetItem(itemData);
+                return;
+            }
         }
     }
 

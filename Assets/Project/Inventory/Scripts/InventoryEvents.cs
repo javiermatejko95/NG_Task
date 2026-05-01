@@ -2,14 +2,14 @@ using System;
 
 public static class InventoryEvents
 {
-    public static event Action<InventoryItem> OnItemAdded;
+    public static event Action<ItemData> OnItemAdded;
     public static event Action<InventoryItem> OnItemRemoved;
     public static event Action<InventoryItem> OnItemUsed;
     public static event Action<InventoryItem> OnItemEquipped;
     public static event Action<InventoryItem> OnItemUnequipped;
     public static event Action<InventoryItem, InventoryItem> OnItemSwapped;
 
-    public static void RaiseOnItemAdded(InventoryItem item)
+    public static void RaiseOnItemAdded(ItemData item)
     {
         OnItemAdded?.Invoke(item);
     }

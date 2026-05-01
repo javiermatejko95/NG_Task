@@ -20,9 +20,15 @@ public class InventoryController : MonoBehaviour
         _inventoryUI.Initialize(_maxSlots);
     }
 
-    private void AddItem(InventoryItem item)
+    private void AddItem(ItemData itemData)
     {
+        //if(inventoryItems.Count >= _maxSlots)
+        //{
+        //    //TODO: Show message to player that inventory is full
+        //    return;
+        //}
 
+        _inventoryUI.AddItem(itemData);
     }
 
     private void RemoveItem(InventoryItem item)
