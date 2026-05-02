@@ -10,6 +10,9 @@ E – Interact with NPCs and world objects
 
 I – Open / Close Inventory
 
+Space - Jump
+
+
 🎒 Inventory Controls
 
 Left Click + Drag – Move items between slots
