@@ -92,6 +92,7 @@ public class PlayerInputHandler : MonoBehaviour
     // ──────────────────────────────────────────────
 
     public event Action<bool> OnToggleInventory;
+    public event Action OnLightAttack;
 
     // ──────────────────────────────────────────────
     // SETTINGS
@@ -227,6 +228,7 @@ public class PlayerInputHandler : MonoBehaviour
         if (ctx.interaction is UnityEngine.InputSystem.Interactions.TapInteraction)
         {
             AttackTapPressed = true;
+            OnLightAttack?.Invoke();
         }
         else if (ctx.interaction is UnityEngine.InputSystem.Interactions.HoldInteraction)
         {

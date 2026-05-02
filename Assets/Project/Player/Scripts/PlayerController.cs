@@ -55,13 +55,6 @@ public class PlayerController : MonoBehaviour
     public Transform groundCheckOrigin;
 
     // ──────────────────────────────────────────────
-    // SLOPE HANDLING
-    // ──────────────────────────────────────────────
-    [Header("Slope Handling")]
-    public float maxSlopeAngle = 45f;
-    public float slopeRayLength = 1.5f;
-
-    // ──────────────────────────────────────────────
     // REFERENCES (private)
     // ──────────────────────────────────────────────
     private CharacterController _cc;
@@ -85,6 +78,8 @@ public class PlayerController : MonoBehaviour
 
     private float _currentSpeed;
     private float _animationBlend;
+
+    private bool _canMove = true;
 
     // ──────────────────────────────────────────────
     // ANIMATION ID's
@@ -125,6 +120,8 @@ public class PlayerController : MonoBehaviour
         _cc    = GetComponent<CharacterController>();
         _input = GetComponent<PlayerInputHandler>();
         _anim = GetComponent<Animator>();
+
+        PlayerEvents.OnToggleCanMove += HandleToggleCanMove;
 
         if (Camera.main != null)
             _cameraTransform = Camera.main.transform;
@@ -195,7 +192,7 @@ public class PlayerController : MonoBehaviour
 
     private void HandleMovement()
     {
-        Vector2 inputVector = _input.MoveInput;
+        Vector2 inputVector = _canMove ? _input.MoveInput : Vector2.zero;
 
         // Determines if sprinting
         bool wantsSprint   = _input.SprintHeld;
@@ -249,30 +246,11 @@ public class PlayerController : MonoBehaviour
         if (_animationBlend < 0.01f) _animationBlend = 0f;
 
         _anim.SetFloat(SpeedHash, _animationBlend);
-
-        // Slope handling
-        HandleSlope();
     }
 
-    private void HandleSlope()
+    private void HandleToggleCanMove(bool canMove)
     {
-        if (!_isGrounded) return;
-
-        if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, slopeRayLength, groundMask))
-        {
-            float angle = Vector3.Angle(hit.normal, Vector3.up);
-
-            if (angle > 0f && angle <= maxSlopeAngle)
-            {
-                // Project movement onto the slope
-                Vector3 slopeMove = Vector3.ProjectOnPlane(
-                    new Vector3(_velocity.x, 0f, _velocity.z),
-                    hit.normal
-                );
-                _velocity.x = slopeMove.x;
-                _velocity.z = slopeMove.z;
-            }
-        }
+        _canMove = canMove;
     }
 
     // ══════════════════════════════════════════════
