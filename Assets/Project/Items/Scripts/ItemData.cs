@@ -3,6 +3,9 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Inventory/Item")]
 public class ItemData : ScriptableObject
 {
+    // TODO: Add more properties to the item data, such as stats, effects, etc.
+    // Obs: Add an ID field to handle the item in a more robust way, instead of relying on the name. This will help avoid issues with duplicate 
+    // names and make it easier to reference items in code.
     [SerializeField] private string _itemName;
     [SerializeField] private string _tooltipDescription;
     [SerializeField] private ItemType _itemType;

@@ -1,13 +1,14 @@
-using System.Collections.Generic;
-using Unity.VisualScripting;
+using System;
+using System.Linq;
 using UnityEngine;
 
+//Obs: inventorry controller should be the one controlling the whole management of the inventory.Right now it's delegating the responsibility to the UI,
+//which is not ideal. 
+//The UI should only be responsible for displaying the inventory, not managing it.
 public class InventoryController : MonoBehaviour
 {
     [SerializeField] private int _maxSlots = 18;
-    [SerializeField] private InventoryUI _inventoryUI;    
-
-    private List<InventoryItem> inventoryItems = new();
+    [SerializeField] private InventoryUI _inventoryUI;
 
     private void Awake()
     {
@@ -16,20 +17,24 @@ public class InventoryController : MonoBehaviour
         InventoryEvents.OnItemUsed += UseItem;
         InventoryEvents.OnItemEquipped += EquipItem;
         InventoryEvents.OnItemUnequipped += UnequipItem;
-        InventoryEvents.OnItemSwapped += SwapItems;        
+        InventoryEvents.OnItemSwapped += SwapItems;
 
         _inventoryUI.Initialize(_maxSlots);
     }
 
-    private void AddItem(ItemData itemData)
+    private void AddItem(ItemData itemData, Action onSuccess = null, Action onFailure = null)
     {
-        //if(inventoryItems.Count >= _maxSlots)
-        //{
-        //    //TODO: Show message to player that inventory is full
-        //    return;
-        //}
+        bool isFull = !_inventoryUI.GetAllSlots().Any(slot => !slot.HasItem);
+
+        if (isFull)
+        {
+            //TODO: Show message to player that inventory is full
+            onFailure?.Invoke();
+            return;
+        }
 
         _inventoryUI.AddItem(itemData);
+        onSuccess?.Invoke();
     }
 
     private void RemoveItem(InventoryItem item)

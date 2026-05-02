@@ -6,8 +6,11 @@ public class WorldItem : MonoBehaviour, IInteractable
 
     public void Interact(Interactor interactor)
     {
-        InventoryEvents.RaiseOnItemAdded(_data);
+        InventoryEvents.RaiseOnItemAdded(_data, () => HandleOnSuccess(interactor));
+    }
 
+    private void HandleOnSuccess(Interactor interactor)
+    {
         interactor.RemoveFromInRangeList(this);
 
         Destroy(gameObject);

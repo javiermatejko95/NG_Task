@@ -40,6 +40,16 @@ public class InventoryUI : UIPanel
         }
     }
 
+    /// <summary>
+    /// Returns the ordered list of all slots.
+    /// Used by InventorySaveHandler to capture and restore state
+    /// without coupling the save system to internal inventory logic.
+    /// </summary>
+    public List<InventoryItem> GetAllSlots()
+    {
+        return _inventoryItems;
+    }
+
     protected override void OnCloseButtonClicked()
     {
         base.OnCloseButtonClicked();

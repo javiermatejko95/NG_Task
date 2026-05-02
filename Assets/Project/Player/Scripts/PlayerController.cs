@@ -93,7 +93,7 @@ public class PlayerController : MonoBehaviour
     private readonly int SpeedHash = Animator.StringToHash("Speed");
     private readonly int Grounded = Animator.StringToHash("IsGrounded");
     private readonly int Jump = Animator.StringToHash("IsJumping");
-    private readonly int FreeFall = Animator.StringToHash("IsFreeFall");
+    private readonly int FreeFall = Animator.StringToHash("IsFreeFalling");
 
     // ──────────────────────────────────────────────
     // PROPERTIES

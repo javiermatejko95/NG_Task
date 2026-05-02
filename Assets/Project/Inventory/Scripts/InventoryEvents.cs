@@ -2,16 +2,16 @@ using System;
 
 public static class InventoryEvents
 {
-    public static event Action<ItemData> OnItemAdded;
+    public static event Action<ItemData, Action, Action> OnItemAdded;
     public static event Action<InventoryItem> OnItemRemoved;
     public static event Action<InventoryItem> OnItemUsed;
     public static event Action<InventoryItem> OnItemEquipped;
     public static event Action<InventoryItem> OnItemUnequipped;
     public static event Action<InventoryItem, InventoryItem> OnItemSwapped;
 
-    public static void RaiseOnItemAdded(ItemData item)
+    public static void RaiseOnItemAdded(ItemData item, Action onSuccess = null, Action onFailure = null)
     {
-        OnItemAdded?.Invoke(item);
+        OnItemAdded?.Invoke(item, onSuccess, onFailure);
     }
 
     public static void RaiseOnItemRemoved(InventoryItem item)
