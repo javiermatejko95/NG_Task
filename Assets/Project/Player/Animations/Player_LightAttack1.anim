@@ -54155,13 +54155,6 @@ AnimationClip:
     intParameter: 0
     messageOptions: 0
   - time: 0.56666666
-    functionName: AE_EnableLightHitbox
-    data: 
-    objectReferenceParameter: {fileID: 0}
-    floatParameter: 0
-    intParameter: 0
-    messageOptions: 0
-  - time: 0.56666666
     functionName: AE_PlaySwingSound
     data: 
     objectReferenceParameter: {fileID: 0}
@@ -54170,13 +54163,6 @@ AnimationClip:
     messageOptions: 0
   - time: 0.73333335
     functionName: AE_OpenComboWindow
-    data: 
-    objectReferenceParameter: {fileID: 0}
-    floatParameter: 0
-    intParameter: 0
-    messageOptions: 0
-  - time: 0.73333335
-    functionName: AE_DisableHitbox
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0

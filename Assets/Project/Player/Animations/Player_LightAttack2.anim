@@ -62122,13 +62122,6 @@ AnimationClip:
   m_HasMotionFloatCurves: 0
   m_Events:
   - time: 0.6666667
-    functionName: AE_EnableLightHitbox
-    data: 
-    objectReferenceParameter: {fileID: 0}
-    floatParameter: 0
-    intParameter: 0
-    messageOptions: 0
-  - time: 0.6666667
     functionName: AE_PlaySwingSound
     data: 
     objectReferenceParameter: {fileID: 0}
@@ -62137,13 +62130,6 @@ AnimationClip:
     messageOptions: 0
   - time: 0.9
     functionName: AE_OpenComboWindow
-    data: 
-    objectReferenceParameter: {fileID: 0}
-    floatParameter: 0
-    intParameter: 0
-    messageOptions: 0
-  - time: 0.9
-    functionName: AE_DisableHitbox
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
