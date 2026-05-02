@@ -8,13 +8,11 @@ public class InteractionController : MonoBehaviour
     private void Awake()
     {
         _input = GetComponent<PlayerInputHandler>();
+        _input.OnInteract += HandleOnInteract;
     }
 
-    private void Update()
+    private void HandleOnInteract()
     {
-        if (_input.InteractPressed)
-        {
-            _interactor.TryInteract();
-        }
+        _interactor.TryInteract();
     }
 }

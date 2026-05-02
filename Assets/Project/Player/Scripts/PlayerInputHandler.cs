@@ -93,6 +93,7 @@ public class PlayerInputHandler : MonoBehaviour
 
     public event Action<bool> OnToggleInventory;
     public event Action OnLightAttack;
+    public event Action OnInteract;
 
     // ──────────────────────────────────────────────
     // SETTINGS
@@ -201,7 +202,11 @@ public class PlayerInputHandler : MonoBehaviour
     private void OnJumpPerformed(InputAction.CallbackContext ctx) => JumpPressed = true;
     private void OnSprintPerformed(InputAction.CallbackContext ctx) => SprintHeld = true;
     private void OnSprintCanceled(InputAction.CallbackContext ctx) => SprintHeld = false;
-    private void OnInteractPerformed(InputAction.CallbackContext ctx) => InteractPressed = true;
+    private void OnInteractPerformed(InputAction.CallbackContext ctx)
+    {
+        InteractPressed = true;
+        OnInteract?.Invoke();
+    }
 
     // ══════════════════════════════════════════════
     // COMBAT CALLBACKS
