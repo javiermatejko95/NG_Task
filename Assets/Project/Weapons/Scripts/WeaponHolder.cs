@@ -16,4 +16,9 @@ public class WeaponHolder : MonoBehaviour
     {
         _currentWeapon.DisableTrail();
     }
+
+    public void AE_PlaySwingSound(int index)
+    {
+        _currentWeapon.PlaySwingSound(index);
+    }
 }
